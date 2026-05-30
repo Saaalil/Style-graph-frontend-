@@ -272,3 +272,83 @@ body {
   border-radius: 8px;
   margin: 2rem 0;
 }
+
+/* Flowchart Styles */
+.flowchart-container {
+  padding: 2rem;
+  background: var(--glass-bg);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  max-width: 600px;
+}
+.flow-node {
+  background: linear-gradient(145deg, rgba(66,133,244,0.1), rgba(66,133,244,0.02));
+  border: 1px solid rgba(66,133,244,0.3);
+  padding: 1.2rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+.flow-node:hover {
+  transform: translateY(-2px);
+  border-color: rgba(66,133,244,0.6);
+}
+.flow-node h3 {
+  margin: 0 0 0.5rem 0 !important;
+  color: var(--accent-blue) !important;
+  font-size: 1.1rem !important;
+  font-family: 'Roboto Mono', monospace !important;
+}
+.flow-node p {
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 0.9rem !important;
+}
+.flow-arrow {
+  width: 2px;
+  height: 40px;
+  background: var(--glass-border);
+  position: relative;
+  z-index: 1;
+}
+.flow-arrow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 6px;
+  height: 20px;
+  background: var(--accent-blue);
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--accent-blue), 0 0 20px var(--accent-blue);
+  animation: flowDown 2s infinite linear;
+}
+@keyframes flowDown {
+  0% { top: -20px; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { top: 40px; opacity: 0; }
+}
+.disclaimer-box {
+  background: rgba(234, 67, 53, 0.05);
+  border: 1px solid rgba(234, 67, 53, 0.2);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  text-align: left;
+}
+.disclaimer-box p {
+  color: #ea4335 !important;
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.5;
+}

@@ -106,11 +106,38 @@ export default function Home() {
             Traditional search engines look for exact keyword matches. StyleGraph uses advanced embeddings 
             to understand the <em>concept</em> of what you're looking for, returning results that match your vibe perfectly.
           </p>
-          <img 
-            src="https://media.giphy.com/media/26tn33aiTi1jIGsD6/giphy.gif" 
-            alt="Search Demonstration" 
-            className="showcase-gif" 
-          />
+          <div className="flowchart-container">
+            <div className="flow-node">
+              <h3>1. User Query</h3>
+              <p>Text description or uploaded image</p>
+            </div>
+            <div className="flow-arrow"></div>
+            <div className="flow-node">
+              <h3>2. Query Understanding</h3>
+              <p>Custom Keyword Transformation (Regex & Keywords)</p>
+            </div>
+            <div className="flow-arrow"></div>
+            <div className="flow-node">
+              <h3>3. Vector Retrieval</h3>
+              <p>Gemini Embedding 2 + FAISS find nearest neighbors</p>
+            </div>
+            <div className="flow-arrow"></div>
+            <div className="flow-node">
+              <h3>4. Contextual Re-ranking</h3>
+              <p>Fast Re-ranking (Sort by FAISS Similarity Score)</p>
+            </div>
+            <div className="flow-arrow"></div>
+            <div className="flow-node" style={{background: 'linear-gradient(145deg, rgba(52,168,83,0.1), rgba(52,168,83,0.02))', borderColor: 'rgba(52,168,83,0.4)'}}>
+              <h3 style={{color: 'var(--accent-green)'}}>5. Final Results</h3>
+              <p>Filtered, sorted, contextually relevant items</p>
+            </div>
+          </div>
+          
+          <div className="disclaimer-box">
+            <p>
+              <strong>Note:</strong> The returned products may sometimes seem a bit off because the current dataset is a bit messy and contains synthetic labels. However, if someone implements this pipeline with proper product categories and clean data, it works flawlessly.
+            </p>
+          </div>
         </section>
       )}
 
