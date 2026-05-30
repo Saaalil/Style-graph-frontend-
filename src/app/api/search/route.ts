@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     // Connect to the Hugging Face Space securely on the server
-    const client = await Client.connect("Saaalil/ML-Contextual-search-prod");
+    const client = await Client.connect("Saalil/ML-Contextual-search");
 
     // Call the text search endpoint
     const result = await client.predict("/search_by_text", { 

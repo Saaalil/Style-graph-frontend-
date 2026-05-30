@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'saaalil-ml-contextual-search-prod.hf.space',
+        hostname: 'saalil-ml-contextual-search.hf.space',
       },
     ],
   },
