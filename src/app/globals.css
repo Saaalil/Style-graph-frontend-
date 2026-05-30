@@ -352,3 +352,15 @@ body {
   font-size: 0.95rem !important;
   line-height: 1.5;
 }
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(52, 168, 83, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 168, 83, 0);
+  }
+}

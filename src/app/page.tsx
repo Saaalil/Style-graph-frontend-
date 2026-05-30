@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
 interface Product {
@@ -16,6 +16,18 @@ export default function Home() {
   const [results, setResults] = useState<Product[] | null>(null);
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
+  const [dbCount, setDbCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/count')
+      .then(res => res.json())
+      .then(data => {
+        if (data && typeof data.count === 'number') {
+          setDbCount(data.count);
+        }
+      })
+      .catch(err => console.error('Failed to fetch DB count:', err));
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +92,17 @@ export default function Home() {
       <section className={`hero ${hasSearched ? 'compact' : ''}`}>
         <h1>StyleGraph</h1>
         <p>A contextual, minimalist search engine powered by multimodal embeddings.</p>
+        
+        <div style={{ marginTop: '0.5rem', marginBottom: '2rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+          {dbCount !== null ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(66, 133, 244, 0.1)', padding: '4px 12px', borderRadius: '12px', border: '1px solid rgba(66, 133, 244, 0.2)' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#34A853', boxShadow: '0 0 8px #34A853', animation: 'pulse 2s infinite' }}></div>
+              Currently indexing <strong>{dbCount}</strong> products
+            </span>
+          ) : (
+            <span style={{ opacity: 0.5 }}>Connecting to database...</span>
+          )}
+        </div>
         
         <div className="search-container">
           <form onSubmit={handleSearch}>
