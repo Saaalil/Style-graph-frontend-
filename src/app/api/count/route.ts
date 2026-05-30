@@ -3,7 +3,7 @@ import { Client } from '@gradio/client';
 
 export async function GET() {
   try {
-    const hfSpace = process.env.NEXT_PUBLIC_HF_SPACE || 'Saalil/ML-Contextual-search';
+    const hfSpace = process.env.NEXT_PUBLIC_HF_SPACE || 'Saaalil/ML-Contextual-search-prod';
     
     // Connect to the HF Space
     const client = await Client.connect(hfSpace);
