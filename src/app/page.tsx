@@ -1,0 +1,153 @@
+'use client';
+
+import { useState } from 'react';
+import { Search } from 'lucide-react';
+
+interface Product {
+  imageUrl: string;
+  title: string;
+  price: string;
+  reason: string;
+}
+
+export default function Home() {
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<Product[] | null>(null);
+  const [error, setError] = useState('');
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+
+    setLoading(true);
+    setError('');
+    setHasSearched(true);
+
+    try {
+      const res = await fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, top_k: 20 }),
+      });
+
+      const json = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(json.error || 'Search failed');
+      }
+
+      // Parse the Gradio gallery data
+      const galleryData = json.data[0];
+      
+      if (!Array.isArray(galleryData)) {
+         throw new Error("Invalid response format from AI Server");
+      }
+
+      const parsedResults: Product[] = galleryData.map((item: any) => {
+        const imageUrl = item?.image?.url || '';
+        const fullCaption = item?.caption || '';
+        
+        // Parse "Title · $Price · Score: X\nReason"
+        const lines = fullCaption.split('\n');
+        const firstLine = lines[0] || '';
+        const reason = lines.slice(1).join('\n').trim();
+        
+        const parts = firstLine.split('·').map((s: string) => s.trim());
+        const title = parts[0] || 'Unknown Item';
+        const price = parts[1] || '$0';
+
+        return {
+          imageUrl,
+          title,
+          price,
+          reason
+        };
+      });
+
+      setResults(parsedResults);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fade-in">
+      {/* Hero Section */}
+      <section className={`hero ${hasSearched ? 'compact' : ''}`}>
+        <h1>StyleGraph</h1>
+        <p>A contextual, minimalist search engine powered by multimodal embeddings.</p>
+        
+        <div className="search-container">
+          <form onSubmit={handleSearch}>
+            <input 
+              type="text" 
+              className="search-input"
+              placeholder="e.g. A casual summer dress under $80"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              disabled={loading}
+            />
+            <button type="submit" className="search-button" disabled={loading} title="Search">
+              {loading ? <span className="loader"></span> : <Search size={20} />}
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Landing Explanation (Only show when not searched) */}
+      {!hasSearched && (
+        <section className="explanation-section fade-in">
+          <h2>How it works</h2>
+          <p>
+            Traditional search engines look for exact keyword matches. StyleGraph uses advanced embeddings 
+            to understand the <em>concept</em> of what you're looking for, returning results that match your vibe perfectly.
+          </p>
+          <img 
+            src="https://media.giphy.com/media/26tn33aiTi1jIGsD6/giphy.gif" 
+            alt="Search Demonstration" 
+            className="showcase-gif" 
+          />
+        </section>
+      )}
+
+      {/* Results Section */}
+      {error && <div className="error-message">{error}</div>}
+      
+      {results && results.length > 0 && (
+        <div className="results-grid fade-in">
+          {results.map((product, idx) => (
+            <div key={idx} className="product-card">
+              <div className="product-image-container">
+                {product.imageUrl ? (
+                  <img 
+                    src={product.imageUrl} 
+                    alt={product.title} 
+                    className="product-image"
+                    style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                  />
+                ) : (
+                  <div style={{width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                    No Image
+                  </div>
+                )}
+              </div>
+              <div className="product-content">
+                <h3 className="product-title">{product.title}</h3>
+                <div className="product-price">{product.price}</div>
+                {product.reason && (
+                  <div className="ai-reason">
+                    {product.reason}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
